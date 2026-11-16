@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mortal Kombat 1 no Steam</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="steam-topbar">
+    <a class="brand" href="../index.html">
+      <img src="../assets/imagens/Steam.png" alt="Steam Logo">
+      <span>STEAM</span>
+    </a>
+
+    <nav class="main-nav">
+      <a class="nav-link active" href="../index.html">LOJA</a>
+      <a class="nav-link" href="../index.html#library">BIBLIOTECA</a>
+      <a class="nav-link" href="../index.html">COMUNIDADE</a>
+      <a class="nav-link" href="../index.html">SUPORTE</a>
+    </nav>
+
+    <div class="account-area">
+      <button class="cart-btn" id="openCart">
+        🛒 Carrinho <span class="cart-badge" id="cartCount">0</span>
+      </button>
+      <div id="accountProfileArea" style="display:flex; align-items:center; gap:8px;"></div>
+    </div>
+  </header>
+
+  <main class="page-section active-section">
+    <div class="steam-game-page" id="gameDetailContainer"></div>
+  </main>
+
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <div>
+        <span class="section-eyebrow" style="color:#66c0f4; font-size:11px;">STEAM STORE</span>
+        <h2 style="color:#fff; font-size:20px;">Seu Carrinho</h2>
+      </div>
+      <button class="auth-close-btn" id="closeCart" style="position:static;">×</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Total estimado:</span>
+        <strong id="cartTotal">R$ 0,00</strong>
+      </div>
+      <button id="checkoutBtn" class="btn-steam-green" style="width:100%; padding:13px; font-size:15px;">Finalizar Compra para Minha Conta</button>
+      <button id="clearCart" class="btn-steam-blue" style="width:100%; margin-top:8px;">Esvaziar Carrinho</button>
+    </div>
+  </aside>
+
+  <div class="steam-modal-backdrop" id="authModal">
+    <div class="steam-auth-box">
+      <button class="auth-close-btn" id="closeAuthModal">×</button>
+      <div class="auth-logo-header">
+        <img src="../assets/imagens/Steam.png" alt="Steam">
+        <h2>CONTA STEAM</h2>
+      </div>
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tabLoginBtn">INICIAR SESSÃO</button>
+        <button type="button" class="auth-tab-btn" id="tabRegisterBtn">CRIAR CONTA</button>
+      </div>
+      <p class="auth-Feedback" id="authFeedbackMsg"></p>
+      <form class="auth-form" id="loginForm">
+        <div class="auth-field">
+          <label for="loginUsername">Iniciar sessão com o nome de conta</label>
+          <input type="text" id="loginUsername" placeholder="Ex: PlayerOne" required>
+        </div>
+        <div class="auth-field">
+          <label for="loginPassword">Senha</label>
+          <input type="password" id="loginPassword" placeholder="Sua senha" required>
+        </div>
+        <button type="submit" class="auth-submit-btn">Iniciar Sessão</button>
+      </form>
+      <form class="auth-form" id="registerForm" style="display:none;">
+        <div class="auth-field">
+          <label for="regUsername">Nome de Conta Steam</label>
+          <input type="text" id="regUsername" placeholder="Escolha seu nome de usuário" required>
+        </div>
+        <div class="auth-field">
+          <label for="regEmail">Endereço de E-mail</label>
+          <input type="email" id="regEmail" placeholder="seuemail@exemplo.com" required>
+        </div>
+        <div class="auth-field">
+          <label for="regPassword">Criar Senha</label>
+          <input type="password" id="regPassword" placeholder="Crie uma senha" required>
+        </div>
+        <button type="submit" class="auth-submit-btn">Cadastrar Nova Conta</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <footer>
+    <div>
+      <strong style="color:#fff;">© Valve Corporation / TechPlay Steam Clone</strong>
+      <p style="margin-top:4px;">Página oficial de Mortal Kombat 1.</p>
+    </div>
+    <a href="../index.html" style="color:#66c0f4;">← Voltar para a Loja</a>
+  </footer>
+
+  <script>
+    window.ASSET_PREFIX = '../';
+    window.STANDALONE_GAME_ID = 'mortal-kombat-1';
+  </script>
+  <script src="../js/games-data.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

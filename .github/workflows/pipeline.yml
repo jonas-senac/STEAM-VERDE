@@ -1,0 +1,125 @@
+name: Verificação de Segurança do Projeto
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: project-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  checks:
+    name: Verificar arquivos e segurança
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verificar arquivos não permitidos
+        shell: bash
+        run: |
+          echo "Verificando arquivos do projeto..."
+
+          bad_files=$(find . \
+            -type f \
+            \( -name "*.exe" -o -name "*.bat" -o -name "*.cmd" \
+            -o -name "*.dll" \) \
+            -not -path './.git/*' || true)
+
+          if [ -n "$bad_files" ]; then
+            echo "::error::Foram encontrados arquivos que precisam de revisão:"
+            echo "$bad_files"
+            exit 1
+          fi
+
+          echo "Verificação de arquivos concluída."
+
+      - name: Verificar arquivos principais
+        shell: bash
+        run: |
+          for file in index.html style.css script.js; do
+            found=$(find . -maxdepth 3 \
+              -type f -name "$file" \
+              -not -path '*/.*' | head -n 1)
+
+            if [ -z "$found" ] || [ ! -s "$found" ]; then
+              echo "::error::Arquivo ausente ou vazio: $file"
+              exit 1
+            fi
+
+            echo "Arquivo encontrado: $found"
+
+            if [ "$file" = "script.js" ]; then
+              node --check "$found"
+              echo "Sintaxe JavaScript validada."
+            fi
+
+            if [ "$file" = "index.html" ]; then
+              if ! grep -qi "<html" "$found"; then
+                echo "::error::A tag HTML principal não foi encontrada."
+                exit 1
+              fi
+            fi
+          done
+
+      - name: Verificar possíveis segredos no código
+        shell: bash
+        run: |
+          if grep -rnI -E \
+            "(AIza[0-9A-Za-z_-]{35}|ghp_[0-9A-Za-z]{36}|sk-[0-9A-Za-z]{48})" \
+            --include="*.html" \
+            --include="*.css" \
+            --include="*.js" . 2>/dev/null; then
+            echo "::error::Possível chave ou token exposto. Revise os arquivos."
+            exit 1
+          fi
+
+          if grep -rnI -E '\beval[[:space:]]*\(' \
+            --include="*.js" . 2>/dev/null; then
+            echo "::warning::Uso de eval() encontrado. Verifique se é necessário."
+          fi
+
+          echo "Verificação de possíveis segredos concluída."
+
+      - name: Verificar conflitos de merge
+        shell: bash
+        run: |
+          if grep -rnI -E \
+            '^(<<<<<<< |=======|>>>>>>> )' \
+            --include="*.html" \
+            --include="*.css" \
+            --include="*.js" \
+            --include="*.md" . 2>/dev/null; then
+            echo "::error::Possíveis marcadores de conflito encontrados."
+            exit 1
+          fi
+
+          echo "Nenhum marcador de conflito encontrado."
+
+      - name: Resumir verificações
+        if: always()
+        shell: bash
+        run: |
+          echo "### Resultado das verificações" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Esta execução verifica arquivos principais, padrões de segredos, sintaxe JavaScript e possíveis conflitos de merge." >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Consulte o resultado de cada etapa para identificar eventuais problemas." >> "$GITHUB_STEP_SUMMARY"

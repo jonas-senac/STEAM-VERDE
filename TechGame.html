@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bem-vindo ao Steam | TechPlay Store & Biblioteca</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- HEADER SUPERIOR FIXO ESTILO STEAM -->
+  <header class="steam-topbar">
+    <a class="brand" href="index.html" onclick="event.preventDefault(); switchSection('store');">
+      <img src="assets/imagens/Steam.png" alt="Steam Logo">
+      <span>STEAM</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Navegação Principal Steam">
+      <button class="nav-link active" data-section="store">LOJA</button>
+      <button class="nav-link" data-section="library">BIBLIOTECA</button>
+      <button class="nav-link" data-section="community">COMUNIDADE</button>
+      <button class="nav-link" data-section="support">SUPORTE</button>
+    </nav>
+
+    <div class="account-area">
+      <button class="cart-btn" id="openCart" aria-label="Abrir Carrinho">
+        🛒 Carrinho <span class="cart-badge" id="cartCount">0</span>
+      </button>
+      <div id="accountProfileArea" style="display:flex; align-items:center; gap:8px;"></div>
+    </div>
+  </header>
+
+  <!-- SUB-NAVEGAÇÃO AZUL DA LOJA STEAM -->
+  <div class="store-subnav" id="storeSubnavBar">
+    <button onclick="switchSection('store')">Sua Loja</button>
+    <button onclick="openGameDetails('deltarune')">Deltarune</button>
+    <button onclick="openGameDetails('gta-v')">Grand Theft Auto V</button>
+    <button onclick="switchSection('library')">Meus Jogos</button>
+    <label class="search-box">
+      <input id="searchInput" type="search" placeholder="buscar jogo ou tag na loja...">
+      <span>⌕</span>
+    </label>
+  </div>
+
+  <!-- ABA 1: LOJA STEAM -->
+  <main id="storeSection" class="page-section active-section">
+    <section class="featured-showcase">
+      <div class="section-eyebrow">DESTAQUES E RECOMENDADOS</div>
+      <div class="featured-box" id="featuredBoxContainer"></div>
+      <div class="featured-selector" id="featuredDots"></div>
+    </section>
+
+    <section class="store-toolbar">
+      <div class="toolbar-group">
+        <label for="categoryFilter">Categoria</label>
+        <select id="categoryFilter">
+          <option value="all">Todas as Categorias</option>
+          <option value="acao">Ação</option>
+          <option value="aventura">Aventura</option>
+          <option value="rpg">RPG</option>
+          <option value="terror">Terror / Survival Horror</option>
+          <option value="luta">Luta</option>
+        </select>
+      </div>
+
+      <div class="toolbar-group">
+        <label for="sortSelect">Ordenar por</label>
+        <select id="sortSelect">
+          <option value="featured">Relevância / Destaques</option>
+          <option value="priceAsc">Menor Preço</option>
+          <option value="priceDesc">Maior Preço</option>
+          <option value="name">Ordem Alfabética (A-Z)</option>
+        </select>
+      </div>
+
+      <span class="result-counter" id="resultCount"></span>
+    </section>
+
+    <section class="catalog-section">
+      <div class="section-eyebrow" style="margin-bottom:16px;">OFERTAS ESPECIAIS E CATÁLOGO COMPLETO</div>
+      <div id="gameGrid" class="game-grid"></div>
+    </section>
+  </main>
+
+  <!-- ABA DINÂMICA: PÁGINA INDIVIDUAL DO JOGO -->
+  <main id="gameDetailSection" class="page-section">
+    <div class="steam-game-page" id="gameDetailContainer"></div>
+  </main>
+
+  <!-- ABA 2: BIBLIOTECA IGUAL AO CLIENTE DESKTOP DA STEAM -->
+  <main id="librarySection" class="page-section">
+    <div class="steam-library-client">
+      <!-- COLUNA ESQUERDA (SIDEBAR) -->
+      <aside class="library-sidebar">
+        <div class="library-sidebar-top">
+          <button class="library-home-btn" onclick="switchSection('store')">
+            <span>🏠 PÁGINA INICIAL / LOJA</span>
+            <span>→</span>
+          </button>
+          <input type="search" id="librarySearchInput" class="library-filter-input" placeholder="Buscar por nome na biblioteca...">
+        </div>
+        <div class="library-list-header">
+          TODOS OS JOGOS (<span id="libraryOwnedCount">0</span>)
+        </div>
+        <div class="library-game-list" id="librarySidebarList"></div>
+      </aside>
+
+      <!-- PAINEL DIREITO (ÁREA PRINCIPAL) -->
+      <section class="library-main-view" id="libraryMainPanel"></section>
+    </div>
+  </main>
+
+  <!-- ABA 3: COMUNIDADE STEAM -->
+  <main id="communitySection" class="page-section">
+    <div class="info-container">
+      <span class="section-eyebrow" style="color:#66c0f4;">ATIVIDADE DA COMUNIDADE</span>
+      <h1 style="color:#fff; margin:6px 0 10px;">Central da Comunidade Steam</h1>
+      <p>Capturas de tela, guias e análises recentes compartilhadas pelos jogadores na plataforma.</p>
+      <div class="community-grid">
+        <article class="community-post">
+          <h3>★ Guia de Batalha: DELTARUNE Simulator</h3>
+          <p style="font-size:13px; line-height:1.6; margin-top:8px;">Ao clicar em JOGAR no Deltarune diretamente pela sua Biblioteca, você acessa o simulador interativo em <strong>deltarunesim.com</strong> para treinar esquivas e ataques!</p>
+        </article>
+        <article class="community-post">
+          <h3>★ Grand Theft Auto V na Biblioteca</h3>
+          <p style="font-size:13px; line-height:1.6; margin-top:8px;">Adquira Grand Theft Auto V na Loja ou adicione ao carrinho para liberar o acesso completo na sua Biblioteca Steam.</p>
+        </article>
+        <article class="community-post">
+          <h3>★ Sistema Multi-Contas Ativo</h3>
+          <p style="font-size:13px; line-height:1.6; margin-top:8px;">Crie quantas contas desejar no botão superior direito. Cada perfil mantém sua própria lista de jogos adquiridos salva no navegador.</p>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <!-- ABA 4: SUPORTE STEAM -->
+  <main id="supportSection" class="page-section">
+    <div class="info-container">
+      <span class="section-eyebrow" style="color:#66c0f4;">ATENDIMENTO STEAM</span>
+      <h1 style="color:#fff; margin:6px 0 10px;">Suporte Steam</h1>
+      <p>Com o que você precisa de ajuda hoje?</p>
+      <div class="community-grid">
+        <article class="community-post">
+          <h3>🎮 Jogos, Software, etc.</h3>
+          <p style="font-size:13px; margin-top:8px;">Ajuda com execução de jogos na Biblioteca e redirecionamentos web.</p>
+        </article>
+        <article class="community-post">
+          <h3>🛒 Compras e Biblioteca</h3>
+          <p style="font-size:13px; margin-top:8px;">Todos os jogos comprados ficam vinculados permanentemente à conta logada via localStorage.</p>
+        </article>
+        <article class="community-post">
+          <h3>👤 Minha Conta</h3>
+          <p style="font-size:13px; margin-top:8px;">Gerenciamento de login, criação de novas contas e troca rápida de usuário.</p>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <!-- CARRINHO LATERAL STEAM -->
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <div>
+        <span class="section-eyebrow" style="color:#66c0f4; font-size:11px;">STEAM STORE</span>
+        <h2 style="color:#fff; font-size:20px;">Seu Carrinho</h2>
+      </div>
+      <button class="auth-close-btn" id="closeCart" style="position:static;">×</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Total estimado:</span>
+        <strong id="cartTotal">R$ 0,00</strong>
+      </div>
+      <button id="checkoutBtn" class="btn-steam-green" style="width:100%; padding:13px; font-size:15px;">Finalizar Compra para Minha Conta</button>
+      <button id="clearCart" class="btn-steam-blue" style="width:100%; margin-top:8px;">Esvaziar Carrinho</button>
+    </div>
+  </aside>
+
+  <!-- MODAL DE AUTENTICAÇÃO STEAM (LOGIN E CRIAR CONTA) -->
+  <div class="steam-modal-backdrop" id="authModal">
+    <div class="steam-auth-box">
+      <button class="auth-close-btn" id="closeAuthModal">×</button>
+      <div class="auth-logo-header">
+        <img src="assets/imagens/Steam.png" alt="Steam">
+        <h2>CONTA STEAM</h2>
+      </div>
+
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tabLoginBtn">INICIAR SESSÃO</button>
+        <button type="button" class="auth-tab-btn" id="tabRegisterBtn">CRIAR CONTA</button>
+      </div>
+
+      <p class="auth-Feedback" id="authFeedbackMsg"></p>
+
+      <!-- FORMULÁRIO DE LOGIN -->
+      <form class="auth-form" id="loginForm">
+        <div class="auth-field">
+          <label for="loginUsername">Iniciar sessão com o nome de conta</label>
+          <input type="text" id="loginUsername" placeholder="Ex: PlayerOne" required>
+        </div>
+        <div class="auth-field">
+          <label for="loginPassword">Senha</label>
+          <input type="password" id="loginPassword" placeholder="Sua senha (padrão: 123)" required>
+        </div>
+        <button type="submit" class="auth-submit-btn">Iniciar Sessão</button>
+      </form>
+
+      <!-- FORMULÁRIO DE CADASTRO -->
+      <form class="auth-form" id="registerForm" style="display:none;">
+        <div class="auth-field">
+          <label for="regUsername">Nome de Conta Steam</label>
+          <input type="text" id="regUsername" placeholder="Escolha seu nome de usuário" required>
+        </div>
+        <div class="auth-field">
+          <label for="regEmail">Endereço de E-mail</label>
+          <input type="email" id="regEmail" placeholder="seuemail@exemplo.com" required>
+        </div>
+        <div class="auth-field">
+          <label for="regPassword">Criar Senha</label>
+          <input type="password" id="regPassword" placeholder="Crie uma senha" required>
+        </div>
+        <button type="submit" class="auth-submit-btn">Cadastrar Nova Conta</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST DE NOTIFICAÇÃO -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <footer>
+    <div>
+      <strong style="color:#fff;">© Valve Corporation / TechPlay Steam Clone</strong>
+      <p style="margin-top:4px;">Todos os direitos reservados. Persistência de contas e biblioteca via localStorage.</p>
+    </div>
+    <span>HTML5 • CSS3 • Vanilla JS</span>
+  </footer>
+
+  <script src="js/games-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
